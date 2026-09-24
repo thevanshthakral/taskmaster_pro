@@ -4,12 +4,16 @@ import os
 basedir = os.path.abspath(os.path.dirname(__file__))
 
 class Config:
-    # Load secret keys from environment or fallback (used by Flask & JWT)
-    SECRET_KEY = os.getenv('SECRET_KEY', 'supersecret')
-    JWT_SECRET_KEY = os.getenv('JWT_SECRET_KEY', 'superjwtkey')  # 🔐 Important for Flask-JWT-Extended
+    # Load secret keys from environment or fallback (used by Flask & JWT).
+    # The fallbacks are for local development only - always set real values in production.
+    SECRET_KEY = os.getenv('SECRET_KEY', 'dev-only-secret-key-change-me-in-production')
+    JWT_SECRET_KEY = os.getenv('JWT_SECRET_KEY', 'dev-only-jwt-secret-key-change-me-in-prod')  # 🔐 Important for Flask-JWT-Extended
 
-    # Database path (inside the instance folder)
-    SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(basedir, 'instance', 'taskmaster.db')
+    # Database path (inside the instance folder), overridable via DATABASE_URL
+    SQLALCHEMY_DATABASE_URI = os.getenv(
+        'DATABASE_URL',
+        'sqlite:///' + os.path.join(basedir, 'instance', 'taskmaster.db'),
+    )
 
     # Disable unnecessary overhead
     SQLALCHEMY_TRACK_MODIFICATIONS = False
