@@ -1,0 +1,238 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>TaskMaster Pro</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><rect width='24' height='24' rx='6' fill='%234f46e5'/><path d='M7 12.5l3 3 7-7' stroke='white' stroke-width='2.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/></svg>">
+  <link rel="stylesheet" href="/static/app.css">
+</head>
+<body>
+  <!-- ============ Auth screen ============ -->
+  <main id="auth-view" class="auth" hidden>
+    <div class="auth-card">
+      <div class="brand brand-lg">
+        <span class="logo" aria-hidden="true"></span>
+        <span>TaskMaster Pro</span>
+      </div>
+      <p class="muted auth-tagline">Plan it, track it, finish it.</p>
+
+      <div class="tabs" role="tablist">
+        <button type="button" role="tab" class="tab active" data-auth-tab="login" aria-selected="true">Sign in</button>
+        <button type="button" role="tab" class="tab" data-auth-tab="register" aria-selected="false">Create account</button>
+      </div>
+
+      <form id="login-form" class="form" novalidate>
+        <label>Email
+          <input name="email" type="email" autocomplete="email" required>
+        </label>
+        <label>Password
+          <input name="password" type="password" autocomplete="current-password" required>
+        </label>
+        <p class="form-error" role="alert"></p>
+        <button class="btn btn-primary btn-block" type="submit">Sign in</button>
+      </form>
+
+      <form id="register-form" class="form" novalidate hidden>
+        <label>Username
+          <input name="username" autocomplete="username" maxlength="80" required>
+        </label>
+        <label>Email
+          <input name="email" type="email" autocomplete="email" maxlength="120" required>
+        </label>
+        <label>Password
+          <input name="password" type="password" autocomplete="new-password" minlength="6" required>
+          <span class="hint">At least 6 characters</span>
+        </label>
+        <p class="form-error" role="alert"></p>
+        <button class="btn btn-primary btn-block" type="submit">Create account</button>
+      </form>
+    </div>
+  </main>
+
+  <!-- ============ App screen ============ -->
+  <div id="app-view" hidden>
+    <header class="topbar">
+      <div class="container topbar-inner">
+        <div class="brand">
+          <span class="logo" aria-hidden="true"></span>
+          <span>TaskMaster Pro</span>
+        </div>
+        <div class="topbar-actions">
+          <button type="button" class="btn btn-ghost icon-btn" id="theme-toggle" title="Toggle theme" aria-label="Toggle theme">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+          </button>
+          <button type="button" class="btn btn-ghost" id="account-btn">
+            <span class="avatar" id="avatar"></span>
+            <span id="username-label" class="hide-sm"></span>
+          </button>
+          <button type="button" class="btn btn-ghost" id="logout-btn" title="Sign out" aria-label="Sign out">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 12H4M8 8l-4 4 4 4M13 4h5a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-5"/></svg>
+            <span class="hide-sm">Sign out</span>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <main class="container">
+      <section class="stats" id="stats" aria-label="Task summary">
+        <div class="stat"><span class="stat-label">Total</span><span class="stat-value" data-stat="total">–</span></div>
+        <div class="stat"><span class="stat-label">Pending</span><span class="stat-value" data-stat="pending">–</span></div>
+        <div class="stat"><span class="stat-label">In progress</span><span class="stat-value" data-stat="in_progress">–</span></div>
+        <div class="stat"><span class="stat-label">Completed</span><span class="stat-value" data-stat="completed">–</span></div>
+        <div class="stat stat-warn"><span class="stat-label">Overdue</span><span class="stat-value" data-stat="overdue">–</span></div>
+        <div class="stat stat-progress">
+          <span class="stat-label">Completion</span>
+          <span class="stat-value" data-stat="completion_rate">–</span>
+          <div class="progress" aria-hidden="true"><div class="progress-bar" id="progress-bar"></div></div>
+        </div>
+      </section>
+
+      <section class="toolbar" aria-label="Search and filters">
+        <div class="toolbar-row">
+          <div class="search">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+            <input id="search" type="search" placeholder="Search tasks…" aria-label="Search tasks">
+          </div>
+          <button type="button" class="btn btn-ghost" id="clear-completed-btn">Clear completed</button>
+          <button type="button" class="btn btn-primary" id="new-task-btn" title="New task (N)">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
+            New task
+          </button>
+        </div>
+        <div class="toolbar-row filters">
+          <select id="filter-status" aria-label="Filter by status">
+            <option value="">All statuses</option>
+            <option value="pending">Pending</option>
+            <option value="in_progress">In progress</option>
+            <option value="completed">Completed</option>
+            <option value="pending,in_progress">Not completed</option>
+          </select>
+          <select id="filter-priority" aria-label="Filter by priority">
+            <option value="">All priorities</option>
+            <option value="high">High</option>
+            <option value="medium">Medium</option>
+            <option value="low">Low</option>
+          </select>
+          <select id="sort" aria-label="Sort by">
+            <option value="created_at:desc">Newest first</option>
+            <option value="created_at:asc">Oldest first</option>
+            <option value="due_date:asc">Due date</option>
+            <option value="priority:desc">Priority</option>
+            <option value="title:asc">Title A–Z</option>
+            <option value="updated_at:desc">Recently updated</option>
+          </select>
+          <label class="check">
+            <input type="checkbox" id="filter-overdue"> Overdue only
+          </label>
+        </div>
+      </section>
+
+      <section aria-label="Tasks">
+        <ul class="task-list" id="task-list"></ul>
+        <div class="empty" id="empty-state" hidden>
+          <div class="empty-icon" aria-hidden="true"></div>
+          <h2 id="empty-title">No tasks yet</h2>
+          <p class="muted" id="empty-text">Create your first task to get started.</p>
+        </div>
+        <nav class="pagination" id="pagination" aria-label="Pagination" hidden>
+          <button type="button" class="btn btn-ghost" id="prev-page">← Previous</button>
+          <span class="muted" id="page-info"></span>
+          <button type="button" class="btn btn-ghost" id="next-page">Next →</button>
+        </nav>
+      </section>
+    </main>
+  </div>
+
+  <!-- ============ Task dialog ============ -->
+  <dialog id="task-dialog" class="dialog">
+    <form id="task-form" class="form" method="dialog" novalidate>
+      <h2 id="task-dialog-title">New task</h2>
+      <label>Title
+        <input name="title" maxlength="150" required>
+      </label>
+      <label>Description
+        <textarea name="description" rows="3"></textarea>
+      </label>
+      <div class="form-row">
+        <label>Status
+          <select name="status">
+            <option value="pending">Pending</option>
+            <option value="in_progress">In progress</option>
+            <option value="completed">Completed</option>
+          </select>
+        </label>
+        <label>Priority
+          <select name="priority">
+            <option value="low">Low</option>
+            <option value="medium" selected>Medium</option>
+            <option value="high">High</option>
+          </select>
+        </label>
+        <label>Due date
+          <input name="due_date" type="date">
+        </label>
+      </div>
+      <p class="form-error" role="alert"></p>
+      <div class="dialog-actions">
+        <button type="button" class="btn btn-danger-ghost" id="task-delete-btn" hidden>Delete</button>
+        <div class="toolbar-spacer"></div>
+        <button type="button" class="btn btn-ghost" data-close>Cancel</button>
+        <button type="submit" class="btn btn-primary" id="task-save-btn">Save</button>
+      </div>
+    </form>
+  </dialog>
+
+  <!-- ============ Account dialog ============ -->
+  <dialog id="account-dialog" class="dialog">
+    <div class="form">
+      <h2>Account</h2>
+      <dl class="profile">
+        <dt>Username</dt><dd id="profile-username"></dd>
+        <dt>Email</dt><dd id="profile-email"></dd>
+        <dt>Member since</dt><dd id="profile-since"></dd>
+      </dl>
+
+      <form id="password-form" class="form sub-form" novalidate>
+        <h3>Change password</h3>
+        <label>Current password
+          <input name="current_password" type="password" autocomplete="current-password" required>
+        </label>
+        <label>New password
+          <input name="new_password" type="password" autocomplete="new-password" minlength="6" required>
+        </label>
+        <p class="form-error" role="alert"></p>
+        <button type="submit" class="btn btn-primary">Update password</button>
+      </form>
+
+      <div class="sub-form danger-zone">
+        <h3>Delete account</h3>
+        <p class="muted">This permanently deletes your account and all of your tasks.</p>
+        <button type="button" class="btn btn-danger" id="delete-account-btn">Delete my account</button>
+      </div>
+
+      <div class="dialog-actions">
+        <div class="toolbar-spacer"></div>
+        <button type="button" class="btn btn-ghost" data-close>Close</button>
+      </div>
+    </div>
+  </dialog>
+
+  <!-- ============ Confirm dialog ============ -->
+  <dialog id="confirm-dialog" class="dialog dialog-sm">
+    <form method="dialog" class="form">
+      <h2 id="confirm-title">Are you sure?</h2>
+      <p class="muted" id="confirm-text"></p>
+      <div class="dialog-actions">
+        <div class="toolbar-spacer"></div>
+        <button value="cancel" class="btn btn-ghost">Cancel</button>
+        <button value="ok" class="btn btn-danger" id="confirm-ok">Confirm</button>
+      </div>
+    </form>
+  </dialog>
+
+  <div class="toasts" id="toasts" aria-live="polite" popover="manual"></div>
+
+  <script src="/static/app.js"></script>
+</body>
+</html>

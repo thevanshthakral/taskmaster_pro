@@ -56,6 +56,11 @@ def create_app(config_overrides=None):
         db.create_all()
         _add_missing_columns()
 
+    @app.route('/', methods=['GET'])
+    def index():
+        # Single-page frontend (app/static/index.html)
+        return app.send_static_file('index.html')
+
     @app.route('/health', methods=['GET'])
     def health():
         return jsonify({'status': 'ok'}), 200
