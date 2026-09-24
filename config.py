@@ -1,4 +1,5 @@
 import os
+from datetime import timedelta
 
 # Get absolute path of the current file's directory
 basedir = os.path.abspath(os.path.dirname(__file__))
@@ -17,3 +18,11 @@ class Config:
 
     # Disable unnecessary overhead
     SQLALCHEMY_TRACK_MODIFICATIONS = False
+
+    # Token lifetimes (in minutes / days), configurable via environment
+    JWT_ACCESS_TOKEN_EXPIRES = timedelta(minutes=int(os.getenv('JWT_ACCESS_TOKEN_MINUTES', '60')))
+    JWT_REFRESH_TOKEN_EXPIRES = timedelta(days=int(os.getenv('JWT_REFRESH_TOKEN_DAYS', '30')))
+
+    # Pagination defaults for GET /tasks
+    TASKS_PER_PAGE = 20
+    TASKS_MAX_PER_PAGE = 100
