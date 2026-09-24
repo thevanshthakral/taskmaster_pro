@@ -36,6 +36,13 @@ def create_app(config_overrides=None):
     from app.routes import auth_bp
     from app.task_routes import task_bp
 
+    from app.models import User
+
+    @jwt.user_lookup_loader
+    def load_user(_jwt_header, jwt_data):
+        # Tokens for deleted accounts are rejected with 401
+        return db.session.get(User, int(jwt_data['sub']))
+
     app.register_blueprint(auth_bp)
     app.register_blueprint(task_bp)
 
@@ -47,8 +54,33 @@ def create_app(config_overrides=None):
     with app.app_context():
         from app import models  # noqa: F401
         db.create_all()
+        _add_missing_columns()
+
+    @app.route('/health', methods=['GET'])
+    def health():
+        return jsonify({'status': 'ok'}), 200
 
     return app
+
+
+def _add_missing_columns():
+    """Add columns that were introduced after a table was created.
+
+    db.create_all() never alters existing tables, so an older database would
+    fail with "no such column". Only nullable columns without server-side
+    constraints are added this way; anything more complex needs a migration.
+    """
+    inspector = db.inspect(db.engine)
+    with db.engine.begin() as conn:
+        for table in db.metadata.sorted_tables:
+            if not inspector.has_table(table.name):
+                continue
+            existing = {col['name'] for col in inspector.get_columns(table.name)}
+            for column in table.columns:
+                if column.name in existing or not column.nullable:
+                    continue
+                col_type = column.type.compile(dialect=db.engine.dialect)
+                conn.execute(db.text(f'ALTER TABLE "{table.name}" ADD COLUMN "{column.name}" {col_type}'))
 
 
 def _json_error(error):
