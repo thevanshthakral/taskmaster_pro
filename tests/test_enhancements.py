@@ -143,3 +143,11 @@ def test_profile_password_and_account_deletion(client):
 
 def test_health(client):
     assert client.get('/health').get_json() == {'status': 'ok'}
+
+
+def test_frontend_is_served(client):
+    resp = client.get('/')
+    assert resp.status_code == 200
+    assert b'TaskMaster Pro' in resp.data
+    assert client.get('/static/app.js').status_code == 200
+    assert client.get('/static/app.css').status_code == 200

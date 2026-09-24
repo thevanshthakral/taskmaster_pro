@@ -11,7 +11,23 @@ pip install -r requirements.txt
 python run.py            # FLASK_DEBUG=1 python run.py for debug mode
 ```
 
-The SQLite database is created automatically at `instance/taskmaster.db`.
+Then open http://localhost:5000/ in your browser. The SQLite database is
+created automatically at `instance/taskmaster.db`.
+
+## Frontend
+
+A single-page web app is served at `/` from `app/static/` (plain HTML, CSS and
+JavaScript, no build step). It covers everything the API offers:
+
+- Sign in / create an account; the session is kept in `localStorage` and the
+  access token is refreshed automatically with the refresh token.
+- Summary cards (totals, overdue, completion rate).
+- Task list with search, status/priority filters, overdue toggle, sorting and
+  pagination.
+- Create, edit, complete and delete tasks (press **N** for a new task), and
+  clear all completed tasks.
+- Account dialog: profile, change password, delete account.
+- Light/dark theme (follows the system, with a toggle) and a mobile layout.
 
 ### Configuration (environment variables or `.env`)
 
