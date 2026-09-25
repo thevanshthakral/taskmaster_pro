@@ -2,236 +2,424 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="color-scheme" content="light dark">
   <title>TaskMaster Pro</title>
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><rect width='24' height='24' rx='6' fill='%234f46e5'/><path d='M7 12.5l3 3 7-7' stroke='white' stroke-width='2.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/></svg>">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><defs><linearGradient id='g' x1='0' y1='0' x2='1' y2='1'><stop offset='0' stop-color='%236366f1'/><stop offset='1' stop-color='%23a855f7'/></linearGradient></defs><rect width='24' height='24' rx='7' fill='url(%23g)'/><path d='M7 12.5l3 3 7-7' stroke='white' stroke-width='2.6' fill='none' stroke-linecap='round' stroke-linejoin='round'/></svg>">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap">
   <link rel="stylesheet" href="/static/app.css">
 </head>
 <body>
-  <!-- ============ Auth screen ============ -->
+  <!-- SVG icon sprite -->
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <symbol id="i-check" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></symbol>
+    <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+    <symbol id="i-inbox" viewBox="0 0 24 24"><path d="M4 13h4l1.5 3h5L16 13h4M5.5 5h13L21 13v5a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1v-5z"/></symbol>
+    <symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></symbol>
+    <symbol id="i-moon" viewBox="0 0 24 24"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></symbol>
+    <symbol id="i-cal" viewBox="0 0 24 24"><path d="M7 3v3M17 3v3M4 9h16M5 5h14a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1z"/></symbol>
+    <symbol id="i-alert" viewBox="0 0 24 24"><path d="M12 8v5M12 16.5v.5M10.3 3.9L2.4 18a2 2 0 0 0 1.7 3h15.8a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/></symbol>
+    <symbol id="i-play" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M10 8.5v7l5.5-3.5z"/></symbol>
+    <symbol id="i-done" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M8 12.5l2.8 2.8L16.5 9.5"/></symbol>
+    <symbol id="i-layers" viewBox="0 0 24 24"><path d="M12 3l9 5-9 5-9-5zM3 13l9 5 9-5"/></symbol>
+    <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></symbol>
+    <symbol id="i-list" viewBox="0 0 24 24"><path d="M9 6h11M9 12h11M9 18h11M4.5 6h.01M4.5 12h.01M4.5 18h.01"/></symbol>
+    <symbol id="i-board" viewBox="0 0 24 24"><rect x="3" y="4" width="5" height="16" rx="1.5"/><rect x="10" y="4" width="5" height="11" rx="1.5"/><rect x="17" y="4" width="4" height="7" rx="1.5"/></symbol>
+    <symbol id="i-menu" viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></symbol>
+    <symbol id="i-x" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></symbol>
+    <symbol id="i-logout" viewBox="0 0 24 24"><path d="M15 12H4M8 8l-4 4 4 4M13 4h5a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-5"/></symbol>
+    <symbol id="i-user" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></symbol>
+    <symbol id="i-trash" viewBox="0 0 24 24"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 12a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2l1-12M9 7V4h6v3"/></symbol>
+    <symbol id="i-sweep" viewBox="0 0 24 24"><path d="M3 21l7-7M14 4l6 6-8.5 8.5a2 2 0 0 1-2.8 0L5.5 15.3a2 2 0 0 1 0-2.8z"/></symbol>
+    <symbol id="i-flag" viewBox="0 0 24 24"><path d="M5 21V4M5 4h11l-2 4 2 4H5"/></symbol>
+    <symbol id="i-eye" viewBox="0 0 24 24"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></symbol>
+    <symbol id="i-eye-off" viewBox="0 0 24 24"><path d="M3 3l18 18M10.6 5.1A10 10 0 0 1 12 5c6.4 0 10 7 10 7a17 17 0 0 1-3.2 4M6.6 6.6A17 17 0 0 0 2 12s3.6 7 10 7a9.7 9.7 0 0 0 5.4-1.6M9.9 9.9a3 3 0 0 0 4.2 4.2"/></symbol>
+    <symbol id="i-keyboard" viewBox="0 0 24 24"><rect x="2" y="6" width="20" height="12" rx="2"/><path d="M6 10h.01M10 10h.01M14 10h.01M18 10h.01M7 14h10"/></symbol>
+    <symbol id="i-bolt" viewBox="0 0 24 24"><path d="M13 2L4 14h7l-1 8 9-12h-7z"/></symbol>
+    <symbol id="i-sort" viewBox="0 0 24 24"><path d="M7 4v16M3 16l4 4 4-4M17 20V4M13 8l4-4 4 4"/></symbol>
+    <symbol id="i-grip" viewBox="0 0 24 24"><path d="M9 6h.01M15 6h.01M9 12h.01M15 12h.01M9 18h.01M15 18h.01"/></symbol>
+  </svg>
+
+  <!-- ================= Auth ================= -->
   <main id="auth-view" class="auth" hidden>
-    <div class="auth-card">
-      <div class="brand brand-lg">
-        <span class="logo" aria-hidden="true"></span>
+    <div class="blobs" aria-hidden="true"><span></span><span></span><span></span></div>
+
+    <section class="auth-hero">
+      <div class="brand brand-light">
+        <span class="logo"><svg><use href="#i-check"/></svg></span>
         <span>TaskMaster Pro</span>
       </div>
-      <p class="muted auth-tagline">Plan it, track it, finish it.</p>
+      <h1>Get things done,<br><span class="gradient-text">beautifully.</span></h1>
+      <p>Plan your day, focus on what matters and celebrate every finished task.</p>
+      <ul class="hero-list">
+        <li><svg><use href="#i-bolt"/></svg> Quick add with natural language: <code>Pay rent tomorrow !high</code></li>
+        <li><svg><use href="#i-board"/></svg> List and drag-and-drop board views</li>
+        <li><svg><use href="#i-sun"/></svg> Smart views for Today, Upcoming and Overdue</li>
+      </ul>
+    </section>
 
-      <div class="tabs" role="tablist">
-        <button type="button" role="tab" class="tab active" data-auth-tab="login" aria-selected="true">Sign in</button>
-        <button type="button" role="tab" class="tab" data-auth-tab="register" aria-selected="false">Create account</button>
+    <section class="auth-card glass">
+      <div class="brand brand-card">
+        <span class="logo"><svg><use href="#i-check"/></svg></span>
+        <span>TaskMaster Pro</span>
+      </div>
+      <h2 class="auth-title" id="auth-title">Welcome back</h2>
+      <p class="muted auth-sub" id="auth-sub">Sign in to continue to your tasks.</p>
+
+      <div class="segmented auth-tabs" role="tablist">
+        <span class="seg-thumb" aria-hidden="true"></span>
+        <button type="button" role="tab" class="seg active" data-auth-tab="login" aria-selected="true">Sign in</button>
+        <button type="button" role="tab" class="seg" data-auth-tab="register" aria-selected="false">Create account</button>
       </div>
 
       <form id="login-form" class="form" novalidate>
-        <label>Email
-          <input name="email" type="email" autocomplete="email" required>
+        <label class="field">
+          <span>Email</span>
+          <input name="email" type="email" autocomplete="email" placeholder="you@example.com" required>
         </label>
-        <label>Password
-          <input name="password" type="password" autocomplete="current-password" required>
+        <label class="field">
+          <span>Password</span>
+          <span class="pw-wrap">
+            <input name="password" type="password" autocomplete="current-password" placeholder="••••••••" required>
+            <button type="button" class="pw-toggle" aria-label="Show password"><svg><use href="#i-eye"/></svg></button>
+          </span>
         </label>
         <p class="form-error" role="alert"></p>
-        <button class="btn btn-primary btn-block" type="submit">Sign in</button>
+        <button class="btn btn-primary btn-lg btn-block" type="submit"><span>Sign in</span></button>
       </form>
 
       <form id="register-form" class="form" novalidate hidden>
-        <label>Username
-          <input name="username" autocomplete="username" maxlength="80" required>
+        <label class="field">
+          <span>Username</span>
+          <input name="username" autocomplete="username" maxlength="80" placeholder="Your name" required>
         </label>
-        <label>Email
-          <input name="email" type="email" autocomplete="email" maxlength="120" required>
+        <label class="field">
+          <span>Email</span>
+          <input name="email" type="email" autocomplete="email" maxlength="120" placeholder="you@example.com" required>
         </label>
-        <label>Password
-          <input name="password" type="password" autocomplete="new-password" minlength="6" required>
-          <span class="hint">At least 6 characters</span>
+        <label class="field">
+          <span>Password</span>
+          <span class="pw-wrap">
+            <input name="password" type="password" autocomplete="new-password" minlength="6" placeholder="At least 6 characters" required>
+            <button type="button" class="pw-toggle" aria-label="Show password"><svg><use href="#i-eye"/></svg></button>
+          </span>
+          <span class="strength" data-level="0" aria-live="polite">
+            <span class="strength-bars"><i></i><i></i><i></i><i></i></span>
+            <span class="strength-label"></span>
+          </span>
         </label>
         <p class="form-error" role="alert"></p>
-        <button class="btn btn-primary btn-block" type="submit">Create account</button>
+        <button class="btn btn-primary btn-lg btn-block" type="submit"><span>Create account</span></button>
       </form>
-    </div>
+    </section>
   </main>
 
-  <!-- ============ App screen ============ -->
-  <div id="app-view" hidden>
-    <header class="topbar">
-      <div class="container topbar-inner">
+  <!-- ================= App ================= -->
+  <div id="app-view" class="shell" hidden>
+    <div class="scrim" id="scrim" hidden></div>
+
+    <aside class="sidebar" id="sidebar" aria-label="Navigation">
+      <div class="sidebar-top">
         <div class="brand">
-          <span class="logo" aria-hidden="true"></span>
+          <span class="logo"><svg><use href="#i-check"/></svg></span>
           <span>TaskMaster Pro</span>
         </div>
-        <div class="topbar-actions">
-          <button type="button" class="btn btn-ghost icon-btn" id="theme-toggle" title="Toggle theme" aria-label="Toggle theme">
-            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
-          </button>
-          <button type="button" class="btn btn-ghost" id="account-btn">
-            <span class="avatar" id="avatar"></span>
-            <span id="username-label" class="hide-sm"></span>
-          </button>
-          <button type="button" class="btn btn-ghost" id="logout-btn" title="Sign out" aria-label="Sign out">
-            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 12H4M8 8l-4 4 4 4M13 4h5a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-5"/></svg>
-            <span class="hide-sm">Sign out</span>
-          </button>
+        <button type="button" class="icon-btn only-mobile" id="close-drawer" aria-label="Close menu"><svg><use href="#i-x"/></svg></button>
+      </div>
+
+      <nav class="nav" id="nav">
+        <p class="nav-heading">Views</p>
+        <button type="button" class="nav-item" data-view="active"><svg><use href="#i-inbox"/></svg><span>My tasks</span><b class="count" data-count="active">0</b><kbd>1</kbd></button>
+        <button type="button" class="nav-item" data-view="today"><svg><use href="#i-sun"/></svg><span>Today</span><b class="count" data-count="today">0</b><kbd>2</kbd></button>
+        <button type="button" class="nav-item" data-view="upcoming"><svg><use href="#i-cal"/></svg><span>Upcoming</span><b class="count" data-count="upcoming">0</b><kbd>3</kbd></button>
+        <button type="button" class="nav-item nav-warn" data-view="overdue"><svg><use href="#i-alert"/></svg><span>Overdue</span><b class="count" data-count="overdue">0</b><kbd>4</kbd></button>
+        <button type="button" class="nav-item" data-view="in_progress"><svg><use href="#i-play"/></svg><span>In progress</span><b class="count" data-count="in_progress">0</b><kbd>5</kbd></button>
+        <button type="button" class="nav-item" data-view="completed"><svg><use href="#i-done"/></svg><span>Completed</span><b class="count" data-count="completed">0</b><kbd>6</kbd></button>
+        <button type="button" class="nav-item" data-view="all"><svg><use href="#i-layers"/></svg><span>All tasks</span><b class="count" data-count="all">0</b><kbd>7</kbd></button>
+      </nav>
+
+      <div class="sidebar-card">
+        <div class="ring-wrap">
+          <svg class="ring" viewBox="0 0 44 44" aria-hidden="true">
+            <circle class="ring-track" cx="22" cy="22" r="18"/>
+            <circle class="ring-fill" id="side-ring" cx="22" cy="22" r="18"/>
+          </svg>
+          <span class="ring-label" id="side-ring-label">0%</span>
+        </div>
+        <div>
+          <strong id="side-progress-title">Let's get started</strong>
+          <p class="muted small" id="side-progress-text">No tasks yet</p>
         </div>
       </div>
-    </header>
 
-    <main class="container">
-      <section class="stats" id="stats" aria-label="Task summary">
-        <div class="stat"><span class="stat-label">Total</span><span class="stat-value" data-stat="total">–</span></div>
-        <div class="stat"><span class="stat-label">Pending</span><span class="stat-value" data-stat="pending">–</span></div>
-        <div class="stat"><span class="stat-label">In progress</span><span class="stat-value" data-stat="in_progress">–</span></div>
-        <div class="stat"><span class="stat-label">Completed</span><span class="stat-value" data-stat="completed">–</span></div>
-        <div class="stat stat-warn"><span class="stat-label">Overdue</span><span class="stat-value" data-stat="overdue">–</span></div>
-        <div class="stat stat-progress">
-          <span class="stat-label">Completion</span>
-          <span class="stat-value" data-stat="completion_rate">–</span>
-          <div class="progress" aria-hidden="true"><div class="progress-bar" id="progress-bar"></div></div>
-        </div>
-      </section>
-
-      <section class="toolbar" aria-label="Search and filters">
-        <div class="toolbar-row">
-          <div class="search">
-            <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
-            <input id="search" type="search" placeholder="Search tasks…" aria-label="Search tasks">
-          </div>
-          <button type="button" class="btn btn-ghost" id="clear-completed-btn">Clear completed</button>
-          <button type="button" class="btn btn-primary" id="new-task-btn" title="New task (N)">
-            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
-            New task
+      <div class="sidebar-bottom">
+        <button type="button" class="user-chip" id="account-btn">
+          <span class="avatar" id="avatar"></span>
+          <span class="user-meta">
+            <strong id="username-label"></strong>
+            <span class="muted small" id="email-label"></span>
+          </span>
+        </button>
+        <div class="sidebar-actions">
+          <button type="button" class="icon-btn" id="theme-toggle" title="Toggle theme (T)" aria-label="Toggle theme">
+            <svg class="when-light"><use href="#i-moon"/></svg>
+            <svg class="when-dark"><use href="#i-sun"/></svg>
           </button>
+          <button type="button" class="icon-btn" id="shortcuts-btn" title="Keyboard shortcuts (?)" aria-label="Keyboard shortcuts"><svg><use href="#i-keyboard"/></svg></button>
+          <button type="button" class="icon-btn" id="logout-btn" title="Sign out" aria-label="Sign out"><svg><use href="#i-logout"/></svg></button>
         </div>
-        <div class="toolbar-row filters">
-          <select id="filter-status" aria-label="Filter by status">
-            <option value="">All statuses</option>
-            <option value="pending">Pending</option>
-            <option value="in_progress">In progress</option>
-            <option value="completed">Completed</option>
-            <option value="pending,in_progress">Not completed</option>
-          </select>
-          <select id="filter-priority" aria-label="Filter by priority">
-            <option value="">All priorities</option>
-            <option value="high">High</option>
-            <option value="medium">Medium</option>
-            <option value="low">Low</option>
-          </select>
-          <select id="sort" aria-label="Sort by">
-            <option value="created_at:desc">Newest first</option>
-            <option value="created_at:asc">Oldest first</option>
-            <option value="due_date:asc">Due date</option>
-            <option value="priority:desc">Priority</option>
-            <option value="title:asc">Title A–Z</option>
-            <option value="updated_at:desc">Recently updated</option>
-          </select>
-          <label class="check">
-            <input type="checkbox" id="filter-overdue"> Overdue only
-          </label>
-        </div>
-      </section>
+      </div>
+    </aside>
 
-      <section aria-label="Tasks">
-        <ul class="task-list" id="task-list"></ul>
-        <div class="empty" id="empty-state" hidden>
-          <div class="empty-icon" aria-hidden="true"></div>
-          <h2 id="empty-title">No tasks yet</h2>
-          <p class="muted" id="empty-text">Create your first task to get started.</p>
+    <div class="main-col">
+      <header class="mobile-bar only-mobile">
+        <button type="button" class="icon-btn" id="open-drawer" aria-label="Open menu"><svg><use href="#i-menu"/></svg></button>
+        <div class="brand">
+          <span class="logo"><svg><use href="#i-check"/></svg></span>
+          <span>TaskMaster</span>
         </div>
-        <nav class="pagination" id="pagination" aria-label="Pagination" hidden>
-          <button type="button" class="btn btn-ghost" id="prev-page">← Previous</button>
-          <span class="muted" id="page-info"></span>
-          <button type="button" class="btn btn-ghost" id="next-page">Next →</button>
-        </nav>
-      </section>
-    </main>
+        <button type="button" class="icon-btn" id="mobile-account" aria-label="Account"><span class="avatar avatar-sm" id="avatar-sm"></span></button>
+      </header>
+
+      <main class="main">
+        <section class="hero">
+          <div>
+            <p class="hero-date" id="today-label"></p>
+            <h1 class="hero-title"><span id="greeting">Hello</span>, <span class="gradient-text" id="hero-name"></span></h1>
+            <p class="muted" id="hero-summary">&nbsp;</p>
+          </div>
+          <div class="hero-stats">
+            <div class="mini-stat"><span class="mini-value" data-stat="active">0</span><span class="mini-label">To do</span></div>
+            <div class="mini-stat"><span class="mini-value" data-stat="today">0</span><span class="mini-label">Today</span></div>
+            <div class="mini-stat mini-warn"><span class="mini-value" data-stat="overdue">0</span><span class="mini-label">Overdue</span></div>
+            <div class="mini-stat mini-ok"><span class="mini-value" data-stat="completed">0</span><span class="mini-label">Done</span></div>
+          </div>
+        </section>
+
+        <form class="quick-add" id="quick-add" autocomplete="off">
+          <span class="qa-icon"><svg><use href="#i-plus"/></svg></span>
+          <input id="quick-input" maxlength="200" placeholder="Add a task… try “Pay rent tomorrow !high”" aria-label="Quick add a task">
+          <div class="qa-chips" id="qa-chips" aria-live="polite"></div>
+          <button type="submit" class="btn btn-primary qa-submit" id="quick-submit" disabled>Add</button>
+        </form>
+        <p class="qa-hint muted small">Press <kbd>Enter</kbd> to add · <code>!high</code> <code>!low</code> · <code>today</code> <code>tomorrow</code> <code>next week</code> <code>on friday</code> <code>in 3 days</code> · <kbd>N</kbd> for full editor</p>
+
+        <section class="toolbar">
+          <div class="toolbar-title">
+            <h2 id="view-title">My tasks</h2>
+            <span class="pill" id="view-count">0</span>
+          </div>
+          <div class="toolbar-controls">
+            <label class="search">
+              <svg><use href="#i-search"/></svg>
+              <input id="search" type="search" placeholder="Search" aria-label="Search tasks">
+              <kbd class="search-kbd">/</kbd>
+            </label>
+            <label class="select-wrap" title="Priority">
+              <svg><use href="#i-flag"/></svg>
+              <select id="filter-priority" aria-label="Filter by priority">
+                <option value="">Any priority</option>
+                <option value="high">High</option>
+                <option value="medium">Medium</option>
+                <option value="low">Low</option>
+              </select>
+            </label>
+            <label class="select-wrap" title="Sort">
+              <svg><use href="#i-sort"/></svg>
+              <select id="sort" aria-label="Sort by">
+                <option value="default">Smart order</option>
+                <option value="created_at:desc">Newest first</option>
+                <option value="created_at:asc">Oldest first</option>
+                <option value="due_date:asc">Due date</option>
+                <option value="priority:desc">Priority</option>
+                <option value="title:asc">Title A–Z</option>
+                <option value="updated_at:desc">Recently updated</option>
+              </select>
+            </label>
+          </div>
+          <div class="toolbar-actions">
+            <div class="segmented layout-toggle" role="radiogroup" aria-label="Layout">
+              <span class="seg-thumb" aria-hidden="true"></span>
+              <button type="button" class="seg active" data-layout="list" role="radio" aria-checked="true" title="List (B)"><svg><use href="#i-list"/></svg><span class="sr-only">List</span></button>
+              <button type="button" class="seg" data-layout="board" role="radio" aria-checked="false" title="Board (B)"><svg><use href="#i-board"/></svg><span class="sr-only">Board</span></button>
+            </div>
+            <button type="button" class="icon-btn" id="clear-completed-btn" title="Clear completed tasks" aria-label="Clear completed tasks"><svg><use href="#i-sweep"/></svg></button>
+          </div>
+        </section>
+
+        <section id="list-view" aria-label="Tasks">
+          <ul class="task-list" id="task-list"></ul>
+          <nav class="pagination" id="pagination" aria-label="Pagination" hidden>
+            <button type="button" class="btn btn-soft" id="prev-page">← Previous</button>
+            <span class="muted small" id="page-info"></span>
+            <button type="button" class="btn btn-soft" id="next-page">Next →</button>
+          </nav>
+        </section>
+
+        <section id="board-view" class="board" aria-label="Board" hidden>
+          <div class="column" data-status="pending">
+            <header class="column-head"><span class="dot dot-pending"></span>To do<b class="count" data-col-count="pending">0</b></header>
+            <ul class="column-body" data-drop="pending"></ul>
+          </div>
+          <div class="column" data-status="in_progress">
+            <header class="column-head"><span class="dot dot-progress"></span>In progress<b class="count" data-col-count="in_progress">0</b></header>
+            <ul class="column-body" data-drop="in_progress"></ul>
+          </div>
+          <div class="column" data-status="completed">
+            <header class="column-head"><span class="dot dot-done"></span>Completed<b class="count" data-col-count="completed">0</b></header>
+            <ul class="column-body" data-drop="completed"></ul>
+          </div>
+        </section>
+
+        <div class="empty" id="empty-state" hidden>
+          <div class="empty-art" aria-hidden="true">
+            <svg viewBox="0 0 120 100">
+              <defs><linearGradient id="eg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="var(--accent-1)"/><stop offset="1" stop-color="var(--accent-2)"/></linearGradient></defs>
+              <rect x="22" y="14" width="76" height="72" rx="12" fill="var(--surface-2)" stroke="var(--border)"/>
+              <rect x="34" y="30" width="10" height="10" rx="3" fill="url(#eg)"/><rect x="50" y="32" width="36" height="6" rx="3" fill="var(--border)"/>
+              <rect x="34" y="48" width="10" height="10" rx="3" fill="url(#eg)" opacity=".6"/><rect x="50" y="50" width="28" height="6" rx="3" fill="var(--border)"/>
+              <rect x="34" y="66" width="10" height="10" rx="3" fill="url(#eg)" opacity=".35"/><rect x="50" y="68" width="32" height="6" rx="3" fill="var(--border)"/>
+              <circle cx="96" cy="20" r="12" fill="url(#eg)"/><path d="M90.5 20.5l3.8 3.8 7.2-7.6" stroke="#fff" stroke-width="2.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <h3 id="empty-title">No tasks yet</h3>
+          <p class="muted" id="empty-text">Add your first task above to get started.</p>
+        </div>
+      </main>
+    </div>
+
+    <button type="button" class="fab only-mobile" id="fab" aria-label="New task"><svg><use href="#i-plus"/></svg></button>
   </div>
 
-  <!-- ============ Task dialog ============ -->
-  <dialog id="task-dialog" class="dialog">
-    <form id="task-form" class="form" method="dialog" novalidate>
-      <h2 id="task-dialog-title">New task</h2>
-      <label>Title
-        <input name="title" maxlength="150" required>
-      </label>
-      <label>Description
-        <textarea name="description" rows="3"></textarea>
-      </label>
-      <div class="form-row">
-        <label>Status
-          <select name="status">
-            <option value="pending">Pending</option>
-            <option value="in_progress">In progress</option>
-            <option value="completed">Completed</option>
-          </select>
-        </label>
-        <label>Priority
-          <select name="priority">
-            <option value="low">Low</option>
-            <option value="medium" selected>Medium</option>
-            <option value="high">High</option>
-          </select>
-        </label>
-        <label>Due date
-          <input name="due_date" type="date">
-        </label>
+  <!-- ================= Task dialog ================= -->
+  <dialog id="task-dialog" class="dialog dialog-task">
+    <form id="task-form" novalidate>
+      <div class="dialog-head">
+        <span class="pill" id="task-dialog-kind">New task</span>
+        <button type="button" class="icon-btn" data-close aria-label="Close"><svg><use href="#i-x"/></svg></button>
       </div>
+      <input name="title" class="title-input" maxlength="150" placeholder="Task title" aria-label="Title" required>
+      <textarea name="description" class="desc-input" rows="2" placeholder="Add details…" aria-label="Description"></textarea>
+
+      <div class="prop">
+        <span class="prop-label">Status</span>
+        <div class="chip-group" role="radiogroup" aria-label="Status">
+          <label class="chip chip-pending"><input type="radio" name="status" value="pending" checked><span class="dot dot-pending"></span>To do</label>
+          <label class="chip chip-progress"><input type="radio" name="status" value="in_progress"><span class="dot dot-progress"></span>In progress</label>
+          <label class="chip chip-done"><input type="radio" name="status" value="completed"><span class="dot dot-done"></span>Completed</label>
+        </div>
+      </div>
+      <div class="prop">
+        <span class="prop-label">Priority</span>
+        <div class="chip-group" role="radiogroup" aria-label="Priority">
+          <label class="chip chip-low"><input type="radio" name="priority" value="low"><svg><use href="#i-flag"/></svg>Low</label>
+          <label class="chip chip-medium"><input type="radio" name="priority" value="medium" checked><svg><use href="#i-flag"/></svg>Medium</label>
+          <label class="chip chip-high"><input type="radio" name="priority" value="high"><svg><use href="#i-flag"/></svg>High</label>
+        </div>
+      </div>
+      <div class="prop">
+        <span class="prop-label">Due date</span>
+        <div class="chip-group">
+          <input name="due_date" type="date" class="date-input" aria-label="Due date">
+          <button type="button" class="chip chip-btn" data-due="0">Today</button>
+          <button type="button" class="chip chip-btn" data-due="1">Tomorrow</button>
+          <button type="button" class="chip chip-btn" data-due="7">Next week</button>
+          <button type="button" class="chip chip-btn chip-ghost" data-due="">Clear</button>
+        </div>
+      </div>
+
       <p class="form-error" role="alert"></p>
+      <p class="task-meta-line muted small" id="task-meta-line"></p>
+
       <div class="dialog-actions">
-        <button type="button" class="btn btn-danger-ghost" id="task-delete-btn" hidden>Delete</button>
-        <div class="toolbar-spacer"></div>
-        <button type="button" class="btn btn-ghost" data-close>Cancel</button>
+        <button type="button" class="btn btn-danger-ghost" id="task-delete-btn" hidden><svg><use href="#i-trash"/></svg>Delete</button>
+        <span class="spacer"></span>
+        <span class="muted small hide-sm"><kbd>Ctrl</kbd> + <kbd>Enter</kbd></span>
+        <button type="button" class="btn btn-soft" data-close>Cancel</button>
         <button type="submit" class="btn btn-primary" id="task-save-btn">Save</button>
       </div>
     </form>
   </dialog>
 
-  <!-- ============ Account dialog ============ -->
+  <!-- ================= Account dialog ================= -->
   <dialog id="account-dialog" class="dialog">
-    <div class="form">
+    <div class="dialog-head">
       <h2>Account</h2>
-      <dl class="profile">
-        <dt>Username</dt><dd id="profile-username"></dd>
-        <dt>Email</dt><dd id="profile-email"></dd>
-        <dt>Member since</dt><dd id="profile-since"></dd>
-      </dl>
+      <button type="button" class="icon-btn" data-close aria-label="Close"><svg><use href="#i-x"/></svg></button>
+    </div>
+    <div class="profile-card">
+      <span class="avatar avatar-lg" id="profile-avatar"></span>
+      <div>
+        <strong id="profile-username"></strong>
+        <p class="muted small" id="profile-email"></p>
+        <p class="muted small">Member since <span id="profile-since"></span></p>
+      </div>
+    </div>
 
-      <form id="password-form" class="form sub-form" novalidate>
-        <h3>Change password</h3>
-        <label>Current password
+    <form id="password-form" class="form section" novalidate>
+      <h3>Change password</h3>
+      <label class="field">
+        <span>Current password</span>
+        <span class="pw-wrap">
           <input name="current_password" type="password" autocomplete="current-password" required>
-        </label>
-        <label>New password
+          <button type="button" class="pw-toggle" aria-label="Show password"><svg><use href="#i-eye"/></svg></button>
+        </span>
+      </label>
+      <label class="field">
+        <span>New password</span>
+        <span class="pw-wrap">
           <input name="new_password" type="password" autocomplete="new-password" minlength="6" required>
-        </label>
-        <p class="form-error" role="alert"></p>
-        <button type="submit" class="btn btn-primary">Update password</button>
-      </form>
+          <button type="button" class="pw-toggle" aria-label="Show password"><svg><use href="#i-eye"/></svg></button>
+        </span>
+      </label>
+      <p class="form-error" role="alert"></p>
+      <div><button type="submit" class="btn btn-primary">Update password</button></div>
+    </form>
 
-      <div class="sub-form danger-zone">
-        <h3>Delete account</h3>
-        <p class="muted">This permanently deletes your account and all of your tasks.</p>
-        <button type="button" class="btn btn-danger" id="delete-account-btn">Delete my account</button>
-      </div>
-
-      <div class="dialog-actions">
-        <div class="toolbar-spacer"></div>
-        <button type="button" class="btn btn-ghost" data-close>Close</button>
-      </div>
+    <div class="section danger-zone">
+      <h3>Danger zone</h3>
+      <p class="muted small">Permanently delete your account and all of your tasks.</p>
+      <div><button type="button" class="btn btn-danger" id="delete-account-btn"><svg><use href="#i-trash"/></svg>Delete my account</button></div>
     </div>
   </dialog>
 
-  <!-- ============ Confirm dialog ============ -->
+  <!-- ================= Shortcuts dialog ================= -->
+  <dialog id="shortcuts-dialog" class="dialog dialog-sm">
+    <div class="dialog-head">
+      <h2>Keyboard shortcuts</h2>
+      <button type="button" class="icon-btn" data-close aria-label="Close"><svg><use href="#i-x"/></svg></button>
+    </div>
+    <dl class="shortcuts">
+      <dt><kbd>Q</kbd></dt><dd>Quick add</dd>
+      <dt><kbd>N</kbd></dt><dd>New task (full editor)</dd>
+      <dt><kbd>/</kbd></dt><dd>Search</dd>
+      <dt><kbd>1</kbd>–<kbd>7</kbd></dt><dd>Switch view</dd>
+      <dt><kbd>B</kbd></dt><dd>Toggle list / board</dd>
+      <dt><kbd>T</kbd></dt><dd>Toggle theme</dd>
+      <dt><kbd>Ctrl</kbd>+<kbd>Enter</kbd></dt><dd>Save task</dd>
+      <dt><kbd>Esc</kbd></dt><dd>Close dialog / clear search</dd>
+      <dt><kbd>?</kbd></dt><dd>Show this help</dd>
+    </dl>
+  </dialog>
+
+  <!-- ================= Confirm dialog ================= -->
   <dialog id="confirm-dialog" class="dialog dialog-sm">
-    <form method="dialog" class="form">
+    <form method="dialog">
+      <div class="confirm-icon"><svg><use href="#i-alert"/></svg></div>
       <h2 id="confirm-title">Are you sure?</h2>
       <p class="muted" id="confirm-text"></p>
       <div class="dialog-actions">
-        <div class="toolbar-spacer"></div>
-        <button value="cancel" class="btn btn-ghost">Cancel</button>
+        <span class="spacer"></span>
+        <button value="cancel" class="btn btn-soft">Cancel</button>
         <button value="ok" class="btn btn-danger" id="confirm-ok">Confirm</button>
       </div>
     </form>
   </dialog>
 
   <div class="toasts" id="toasts" aria-live="polite" popover="manual"></div>
+  <div class="fx-layer" id="fx-layer" aria-hidden="true" popover="manual"></div>
 
   <script src="/static/app.js"></script>
 </body>

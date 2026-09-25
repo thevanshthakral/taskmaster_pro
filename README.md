@@ -14,21 +14,6 @@ python run.py            # FLASK_DEBUG=1 python run.py for debug mode
 Then open http://localhost:5000/ in your browser. The SQLite database is
 created automatically at `instance/taskmaster.db`.
 
-## Frontend
-
-A single-page web app is served at `/` from `app/static/` (plain HTML, CSS and
-JavaScript, no build step). It covers everything the API offers:
-
-- Sign in / create an account; the session is kept in `localStorage` and the
-  access token is refreshed automatically with the refresh token.
-- Summary cards (totals, overdue, completion rate).
-- Task list with search, status/priority filters, overdue toggle, sorting and
-  pagination.
-- Create, edit, complete and delete tasks (press **N** for a new task), and
-  clear all completed tasks.
-- Account dialog: profile, change password, delete account.
-- Light/dark theme (follows the system, with a toggle) and a mobile layout.
-
 ### Configuration (environment variables or `.env`)
 
 | Variable | Default | Purpose |
@@ -39,6 +24,35 @@ JavaScript, no build step). It covers everything the API offers:
 | `JWT_ACCESS_TOKEN_MINUTES` | `60` | Access token lifetime |
 | `JWT_REFRESH_TOKEN_DAYS` | `30` | Refresh token lifetime |
 | `FLASK_DEBUG` | `0` | Enable debug mode |
+
+## Frontend
+
+A single-page web app is served at `/` from `app/static/` (plain HTML, CSS and
+JavaScript, no build step, no dependencies).
+
+- **Smart views** in the sidebar with live counts: My tasks, Today, Upcoming,
+  Overdue, In progress, Completed and All tasks.
+- **Quick add** with natural language: `Pay rent tomorrow !high`,
+  `Gym today`, `Report on friday !low`, `Trip in 10 days`, `2030-01-15`.
+  Parsed priority and due date are previewed as chips while you type.
+- **List and Board layouts** – drag cards between To do / In progress /
+  Completed on the board.
+- Search, priority filter, sorting ("Smart order" picks the best order per view)
+  and pagination; your view, layout and filters are remembered.
+- **Undo** for completing and deleting tasks.
+- Task editor with status/priority chips and due-date shortcuts
+  (Today, Tomorrow, Next week).
+- Progress ring, greeting header, confetti when you finish a task and a
+  celebration when everything is done; animated theme switch (light/dark).
+- Account panel: profile, change password, delete account. Password strength
+  meter and show/hide toggles.
+- Keyboard shortcuts: `Q` quick add, `N` new task, `/` search, `1`–`7` views,
+  `B` list/board, `T` theme, `?` help, `Ctrl+Enter` save.
+- Responsive: slide-out navigation, bottom-sheet editor and floating add button
+  on phones. Animations respect "reduce motion".
+
+The session is kept in `localStorage`; the access token is refreshed
+automatically with the refresh token.
 
 ## Running tests
 
